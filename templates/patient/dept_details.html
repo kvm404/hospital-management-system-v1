@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block subtitle %}Department{% endblock %}
+
+<!-- Navbar -->
+{% block navbrand %}Department of <strong>{{dept.name | capitalize}}</strong>{% endblock %}
+
+{% block navlinks %}
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('patient_dashboard') }}">Home</a>
+</li>
+{% endblock %}
+
+
+{% block content %}
+<div class="container shadow-sm m-3 p-3">
+    <h3>Overview</h3>
+    <p class="m-3">{{dept.description}}</p>
+</div>
+
+<div class="container shadow-sm m-3 p-3">
+    <h3>Doctors</h3>
+    <div class="m-3">
+        <h5>No of doctors: {{dept.doctors | length}}</h5>
+        <div class="table-body">
+            <table class="table table-hover mb-0">
+                <tbody>
+                {% if dept.doctors %}
+                    {% for doct in dept.doctors %}
+                    <tr>
+                        <td>{{ doct.user.name }}</td>
+                        <td>
+                            <a href="{{ url_for('check_availability', doctor_id=doct.user_id) }}"
+                            class="btn btn-outline-primary btn-sm">Check Availability</a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('doctor_details', doct_id=doct.user_id) }}"
+                            class="btn btn-outline-primary btn-sm">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                    <td colspan="2" class="text-center text-muted">No doctors are available in this department!</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="{{ url_for('patient_dashboard') }}"
+    class="btn btn-outline-primary btn-sm">Go back</a>
+</div>
+
+
+{% endblock %}

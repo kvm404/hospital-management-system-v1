@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block subtitle %}Add New Doctor{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add New Doctor</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        
+                        <h5 class="text-muted mb-3">Login Credentials</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="text-muted mb-3">Professional Details</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="dept_id" required>
+                                <option value="" disabled selected>Select Department...</option>
+                                {% if departments %}
+                                    {% for dept in departments %}
+                                        <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option disabled>No departments found. Please add them in database.</option>
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Doctor's Bio</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-success">Create Doctor Account</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block subtitle %}Doctor Details{% endblock %}
+
+<!-- Navbar -->
+{% block navbrand %}Department of <strong>{{doctor.department.name | capitalize}}</strong>{% endblock %}
+
+{% block navlinks %}
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('patient_dashboard') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 p-3 bg-white">
+    <h3>{{doctor.user.name}}</h3>
+    <p class="ms-3 mb-5">{{doctor.description}}</p>
+    <a href="{{ url_for('check_availability', doctor_id=doctor.user_id) }}" class="btn btn-outline-primary btn-sm">Check Availability</a>
+    <a href="{{ url_for('department_details', dept_id=doctor.department.id) }}"
+    class="btn btn-outline-primary btn-sm">Go back</a>
+</div>
+{% endblock %}

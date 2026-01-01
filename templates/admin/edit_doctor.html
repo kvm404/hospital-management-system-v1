@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block subtitle %}Edit Doctor{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Doctor Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Doctor Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ doctor.user.name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="dept_id" required>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}" {% if dept.id == doctor.dept_id %}selected{% endif %}>
+                                        {{ dept.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Doctor's Bio</label>
+                            <textarea class="form-control" name="description" rows="4" required>{{ doctor.description }}</textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-success">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

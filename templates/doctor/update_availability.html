@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block subtitle %}Availability{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Manage Availability</h2>
+    <h5 class="my-3 ms-2 text-muted">Doctor Name: {{ doctor.user.name }}</h5>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h4>Add Slot</h4>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Shift</label>
+                        <select class="form-select" name="time" required>
+                            <option value="morning">Morning (8am - 12pm)</option>
+                            <option value="evening">Evening (4pm - 9pm)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">Add Availability</button>
+                </form>
+            </div>
+            <div class="mt-3">
+                 {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+                 {% else %}
+                    <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                 {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card p-3 shadow-sm">
+                <h4>Open Slots</h4>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Shift</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if slots %}
+                            {% for slot in slots %}
+                            <tr>
+                                <td>{{ slot.date.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    {% if slot.time == 'morning' %}
+                                    8am - 12pm 
+                                    {% else %}
+                                    4pm - 9pm
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if slot.appointments %}
+                                        {% if slot.appointments[-1].status != 'cancelled' %}
+                                            <span class="badge bg-warning text-dark">Booked</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Open</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-success">Open</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('delete_slot', id=slot.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                        {% if slot.appointments %} 
+                                            {% if slot.appointments[-1].status != 'cancelled' %}
+                                            disabled
+                                            {% endif %}
+                                        {% endif %}>
+                                        Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="3">No availability added yet.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

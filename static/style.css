@@ -1,0 +1,23 @@
+body {
+    background: #eee;
+}
+
+#form-body{
+    background: #fff;
+    border: 0.5px solid black;
+    margin: auto;
+    margin-top: 50px;
+    width: 400px;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+.table-body{
+    border: 1px solid black;
+    margin-left: 50px;
+    max-width: 900px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+}
+

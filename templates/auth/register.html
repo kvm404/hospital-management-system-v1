@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Patient: Register{% endblock %}
+
+
+{% block content %}
+<div id="form-body" style="height: 580px; margin-top: 40px">
+    <h3 class="text-center">Register</h3>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">Name</label>
+            <input type="text" class="form-control" name="username" id="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+        <div class="mb-3">
+            <label for="pass" class="form-label">Password</label>
+            <input type="password" class="form-control" name="pass" id="pass" required>
+        </div>
+        <div class="mb-3">
+            <label for="cpass" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="cpass" id="cpass" required>
+        </div>
+        <div class="text-center">
+            Already registered? <a href="{{url_for('login')}}">Login</a><br>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </form> 
+ </div>
+{% endblock %}    

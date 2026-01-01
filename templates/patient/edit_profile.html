@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block subtitle %}Edit Profile{% endblock %}
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="width: 500px;">
+    
+    <h4 class="text-muted">Patient Name: {{patient.name}}</h4>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Edit Profile</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" name="name" 
+                           value="{{ patient.name }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" name="email" 
+                           value="{{ patient.email }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" name="phone" 
+                           value="{{ patient.phone }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" name="new_password" 
+                           placeholder="Leave blank to keep current password">
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

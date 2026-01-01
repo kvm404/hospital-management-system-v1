@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block subtitle %}Book Appointment{% endblock %}
+{% block navbar %} {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Book Appointment</h2>
+    <h5 class="text-muted mb-4">Doctor Name: {{ doctor.user.name }} ({{ doctor.department.name }})</h5>
+    
+    <div class="card p-3 shadow-sm">
+        <table class="table border text-center align-middle">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Morning (8am - 12pm)</th>
+                    <th>Evening (4pm - 9pm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dates %}
+                <tr>
+                    <td class="fw-bold bg-light">
+                        {{ d.strftime('%d/%m/%Y') }}
+                    </td>
+
+                    {% for shift in ['morning', 'evening'] %}
+                        <td>
+                            {% set s = slot_map.get((d, shift)) %}
+                            
+                            {% if s %}
+                                {% if s.status == 'OPEN' %}
+                                    <form method="POST">
+                                        <input type="hidden" name="slot_id" value="{{ s.id }}">
+                                        <button type="submit" class="btn btn-primary btn-sm">Book Now</button>
+                                    </form>
+                                {% elif s.status == 'BOOKED' %}
+                                    <span class="badge bg-warning">BOOKED</span>
+                                {% elif s.status == 'COMPLETED' %}
+                                    <span class="badge bg-success">COMPLETED</span>
+                                {% elif s.status == 'CANCELLED' %}
+                                    <span class="badge bg-danger">CANCELLED</span>
+                                {% else %}
+                                    <span class="text-muted small">Not Available</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted small">Not Available</span>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="mt-3">
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

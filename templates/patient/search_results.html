@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block subtitle %}Search Results{% endblock %}
+
+{% block navlinks %}
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('patient_dashboard') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">Search Results for "<span class="text-primary">{{ q }}</span>"</h3>
+
+    <div class="card shadow-sm p-3">
+        {% if doctors %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Doctor Name</th>
+                        <th>Department</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in doctors %}
+                    <tr>
+                        <td class="fw-bold">{{ doc.user.name }}</td>
+                        <td>{{ doc.department.name }}</td>
+                        <td class="text-center">
+                            <a href="{{ url_for('check_availability', doctor_id=doc.user_id) }}" 
+                               class="btn btn-outline-success btn-sm me-2">
+                               Check Availability
+                            </a>
+                            
+                            <a href="{{ url_for('doctor_details', doct_id=doc.user_id) }}" 
+                               class="btn btn-outline-primary btn-sm">
+                               View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="text-danger text-center">
+                No doctors found matching "{{ q }}". Try searching for a different name or specialization.
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('patient_dashboard') }}"
+        class="btn btn-outline-primary btn-sm">Go back</a>
+    </div>
+</div>
+{% endblock %}

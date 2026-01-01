@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% block subtitle %}Admin Dashboard{% endblock %}
+{% block navbrand %}Welcome <strong>{{ current_user.name }}</strong>{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Doctors</h5>
+                    <p class="display-6 fw-bold mb-0">{{ total_doctors }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Patients</h5>
+                    <p class="display-6 fw-bold mb-0">{{ total_patients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Treatments</h5>
+                    <p class="display-6 fw-bold mb-0">{{ total_treatments }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2>Registered Doctors</h2>
+        <div>
+            <a href="{{ url_for('add_department') }}" class="btn btn-dark me-2">+ Add Department</a>
+            <a href="{{ url_for('add_doctor') }}" class="btn btn-success">+ Add New Doctor</a>
+        </div>
+    </div>
+
+    <form method="GET" class="mb-1" style="max-width: 400px;">
+        <div class="input-group">
+        <input type="text" class="form-control" name="d" 
+               placeholder="Search by Name or Department" 
+               value="{{ request.args.get('d', '') }}">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+        {% if request.args.get('d') %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-danger">X</a>
+        {% endif %}
+        </div>
+    </form>
+
+    <div class="card shadow-sm mb-5">
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Email</th> <th>Phone</th> <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if doctors %}
+                        {% for doc in doctors %}
+                        <tr>
+                            <td class="fw-bold">{{ doc.user.name }}</td>
+                            <td>{{ doc.department.name }}</td>
+                            <td>{{ doc.user.email }}</td>
+                            <td>{{ doc.user.phone or '-' }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('update_availability', user_id=doc.user_id) }}" class="btn btn-sm btn-info">Schedule</a>
+                                <a href="{{ url_for('edit_doctor', user_id=doc.user_id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ url_for('delete_user', user_id=doc.user_id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="All the associated data will be deleted!!">Delete</button>
+                                </form>
+                                <a href="{{ url_for('toggle_block', user_id=doc.user_id) }}" 
+                                    class="btn btn-sm {% if doc.user.is_blocked %}btn-success{% else %}btn-dark{% endif %}">
+                                    {% if doc.user.is_blocked %} Unblock {% else %} Block {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="5" class="text-center text-muted">No doctors registered.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <h2 class="mb-2">Registered Patients</h2>
+    <form method="GET" class="mb-1" style="max-width: 400px;">
+        <div class="input-group">
+            <input type="text" class="form-control" name="p" 
+                   placeholder="Search by Name, Email or Phone" 
+                   value="{{ request.args.get('p', '') }}">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+            {% if request.args.get('p') %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-danger">X</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <div class="card shadow-sm mb-5">
+        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if patients %}
+                        {% for p in patients %}
+                        <tr>
+                            <td>{{ p.name }}</td>
+                            <td>{{ p.email }}</td>
+                            <td>{{ p.phone or '-' }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('edit_profile', id=p.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ url_for('delete_user', user_id=p.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="All the associated data will be deleted!!">Delete</button>
+                                </form>
+                                <a href="{{ url_for('toggle_block', user_id=p.id) }}" 
+                                    class="btn btn-sm {% if p.is_blocked %}btn-success{% else %}btn-dark{% endif %}">
+                                    {% if p.is_blocked %} Unblock {% else %} Block {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="4" class="text-center text-muted">No patients registered.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <h3 class="mb-2">Upcoming Appointments</h3>
+    <div class="card shadow-sm">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>History</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if appointments %}
+                        {% for ap in appointments %}
+                        <tr>
+                            <td>
+                                {{ ap.slot.date.strftime('%d/%m/%Y') }}
+                                <br>
+                                <span class="badge bg-light text-dark border">{{ ap.slot.time | capitalize }}</span>
+                            </td>
+                            <td>{{ ap.patient.name }}</td>
+                            <td>{{ ap.doctor.user.name }}</td>
+                            <td>{{ ap.doctor.department.name }}</td>
+                            <td>{{ ap.status | capitalize }}</td>
+                            <td>
+                                <a href="{{ url_for('history', id=ap.patient_id) }}" class="btn btn-outline-primary btn-sm">View History</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="6" class="text-center text-muted">No upcoming appointments.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <h3 class="mt-5 mb-2">All Past Appointments</h3>
+    <div class="card shadow-sm mb-5">
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>History</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if all_appointments %}
+                        {% for ap in all_appointments %} 
+                        <tr>
+                            <td>
+                                {{ ap.slot.date.strftime('%d/%m/%Y') }}
+                                <br>
+                                <span class="badge bg-light text-dark border">{{ ap.slot.time | capitalize }}</span>
+                            </td>
+                            <td>{{ ap.patient.name }}</td>
+                            <td>{{ ap.doctor.user.name }}</td>
+                            <td>{{ ap.doctor.department.name }}</td>
+                            <td>{{ ap.status | capitalize }}</td>
+                            <td>
+                                <a href="{{ url_for('history', id=ap.patient_id) }}" class="btn btn-outline-primary btn-sm">View History</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="6" class="text-center text-muted">No appointments found.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
