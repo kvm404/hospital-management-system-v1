@@ -519,13 +519,13 @@ def admin_dashboard():
     else:
         patients = pat_base.all()
 
-    appointments = (Appointment.query
+    up_appointments = (Appointment.query
                     .join(Slot)
                     .filter(Slot.date >= date.today())
                     .order_by(Slot.date.asc(), Slot.time.desc())
                     .all())
     
-    all_appointments = (Appointment.query
+    past_appointments = (Appointment.query
                     .join(Slot)
                     .filter(Slot.date < date.today())
                     .order_by(Slot.date.asc(), Slot.time.desc())
@@ -534,8 +534,8 @@ def admin_dashboard():
     return render_template('admin/admin_dash.html', 
                            doctors=doctors, 
                            patients=patients, 
-                           appointments=appointments,
-                           all_appointments=all_appointments,
+                           up_appointments=up_appointments,
+                           past_appointments=past_appointments,
                            total_doctors=total_doctors,
                            total_patients=total_patients,
                            total_treatments=total_treatments)

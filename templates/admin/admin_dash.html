@@ -158,8 +158,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if appointments %}
-                        {% for ap in appointments %}
+                    {% if up_appointments %}
+                        {% for ap in up_appointments %}
                         <tr>
                             <td>
                                 {{ ap.slot.date.strftime('%d/%m/%Y') }}
@@ -199,8 +199,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if all_appointments %}
-                        {% for ap in all_appointments %} 
+                    {% if past_appointments %}
+                        {% for ap in past_appointments %} 
                         <tr>
                             <td>
                                 {{ ap.slot.date.strftime('%d/%m/%Y') }}
